@@ -13,10 +13,15 @@ _retry_for_awhile = tenacity.retry(
 )
 
 
-@_retry_for_awhile
 async def wait_for_url(url):
     """Waits until a URL response with a non-500 HTTP response.
     """
+    _log.info(f'Waiting for {url} URL...')
+    await _wait_for_url(url)
+
+
+@_retry_for_awhile
+async def _wait_for_url(url):
     async with async_timeout.timeout(1):
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
@@ -31,8 +36,13 @@ class UrlNotReadyError(Exception):
     """
 
 
-@_retry_for_awhile
 async def wait_for_redis(hostname):
+    _log.info(f'Waiting for Redis at {hostname} host...')
+    await _wait_for_redis(hostname)
+
+
+@_retry_for_awhile
+async def _wait_for_redis(hostname):
     redis = aredis.StrictRedis(host=hostname)
     await redis.ping()
     _log.info(f'Redis at {hostname} is ready.')

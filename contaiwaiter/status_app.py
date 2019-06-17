@@ -31,9 +31,9 @@ def run_status_app():
 
 
 class Config(typing.NamedTuple):
-    port: int
-    redis_hostnames: str
-    urls: str
+    port: int = 80
+    redis_hostnames: str = ''
+    urls: str = ''
 
 
 async def is_env_ready(request: web.Request):
@@ -67,7 +67,9 @@ def _get_config() -> Config:
 def _list_split(list_string: str) -> List[str]:
     """Parses a string containing commas into a list of strings.
     """
-    return [element.strip() for element in list_string.split(',')]
+    if list_string:
+        return [element.strip() for element in list_string.split(',')]
+    return []
 
 
 if __name__ == '__main__':

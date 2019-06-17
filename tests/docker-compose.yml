@@ -1,0 +1,17 @@
+---
+version: '3'
+
+services:
+  contaiwaiter:
+    build: ..
+    image: butla/contaiwaiter
+    ports:
+      - "8080"
+    environment:
+      - URLS=http://sample_http_app
+  # TODO why doesn't this quit immediately when Docker asks for it?
+  sample_http_app:
+    image: python:3.7-alpine
+    ports:
+      - "80"
+    command: 'python -m http.server 80'
